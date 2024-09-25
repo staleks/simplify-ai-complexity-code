@@ -1,0 +1,59 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot'			version "${springBootPluginVersion}"
+	id 'io.spring.dependency-management'	version "${springDependencyManagementPluginVersion}"
+}
+
+group = 'com.jatheon.ergo.ai.assistant'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	implementation.exclude module: "spring-boot-starter-tomcat"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	//~ undertow servlet
+	implementation 'org.springframework.boot:spring-boot-starter-undertow'
+	implementation "io.undertow:undertow-servlet:${undertowVersion}"
+	implementation "io.undertow:undertow-core:${undertowVersion}"
+
+	//~ lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	//~ Apache Commons
+	implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+
+	//~ JSON
+	implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+	implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+
+	//~ dev.langchain4j
+	implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
+	implementation "dev.langchain4j:langchain4j-open-ai:${langchain4jVersion}"
+
+	//~ testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+

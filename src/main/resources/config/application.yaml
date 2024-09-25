@@ -1,0 +1,44 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+logging:
+  config: classpath:logback-spring.xml
+
+server:
+  port: 8090
+  undertow:
+    accesslog:
+      enabled: false
+
+management:
+  endpoints:
+    web.exposure.include: info, health, prometheus
+    enabled-by-default: false
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+      show-details: always
+    prometheus:
+      enabled: true
+
+
+########## CHAT MODELS ##########
+
+langchain4j:
+  chat-model:
+    provider: openai
+    # OpenAI - openai
+    openai:
+      model-name: gpt-3.5-turbo
+      temperature: 0.0
+      top-p: 1.0
+      max-tokens: 100
+      presence-penalty: 0.0
+      frequency-penalty: 0.0
+      max-retries: 3
+      log-requests: true
+      log-responses: true
