@@ -1,10 +1,11 @@
 package com.jatheon.ergo.ai.assistant.model;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+
+@Builder
 public class QuestionResponse {
-
-    private String answer;
-
+    @Getter
+    private final String answer;
 }
