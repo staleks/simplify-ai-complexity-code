@@ -36,6 +36,7 @@ public class SQSMessageEventGateway implements MessageEventGateway {
                 .waitTimeSeconds(waitTimeSeconds)
                 .build();
         List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
+        log.info("Received {} messages from SQS.", messages.size());
         for (Message message : messages) {
             processS3Event(message);
             deleteEvent(message.receiptHandle());
