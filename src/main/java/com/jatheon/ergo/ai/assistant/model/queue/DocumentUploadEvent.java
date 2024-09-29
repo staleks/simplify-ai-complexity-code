@@ -1,16 +1,16 @@
 package com.jatheon.ergo.ai.assistant.model.queue;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.io.Serializable;
 
-@Getter
-@ToString
+@Data
 public class DocumentUploadEvent implements Serializable {
 
-    @Setter
     private String eventId;
+
+    private String eventName;
+    private String bucketName;
+    private String objectKey;
 
 }

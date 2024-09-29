@@ -2,6 +2,7 @@ package com.jatheon.ergo.ai.assistant.config;
 
 import com.jatheon.ergo.ai.assistant.endpoint.QuestionController;
 import com.jatheon.ergo.ai.assistant.endpoint.file.FileUploadController;
+import com.jatheon.ergo.ai.assistant.service.IngestionOrchestrator;
 import com.jatheon.ergo.ai.assistant.service.OpenAIQuestionService;
 import com.jatheon.ergo.ai.assistant.service.QuestionService;
 import com.jatheon.ergo.ai.assistant.service.file.S3UploadStorageService;
@@ -51,6 +52,11 @@ public class ApplicationConfig {
     @Bean
     MessageEventGateway messageEventGateway(final SqsClient sqsConsumerClient) {
         return new SQSMessageEventGateway(sqsConsumerClient);
+    }
+
+    @Bean
+    IngestionOrchestrator ingestionOrchestrator(final MessageEventGateway messageEventGateway) {
+        return new IngestionOrchestrator(messageEventGateway);
     }
 
 }

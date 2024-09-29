@@ -37,6 +37,7 @@ langchain4j:
     provider: openai
     # OpenAI - openai
     openai:
+      api-key: x
       model-name: gpt-3.5-turbo
       temperature: 0.0
       top-p: 1.0
@@ -50,10 +51,14 @@ langchain4j:
 ##### AWS S3 & SQS #####
 aws:
   s3:
+    accessKey: x
+    secretKey: x
     region: us-east-1
     endpoint: https://s3.us-east-1.amazonaws.com
     bucketName: simplify-ai-complexity
   sqs:
+    accessKey: x
+    secretKey: x
     region: us-east-1
     consumer:
       endpoint: https://sqs.us-east-1.amazonaws.com/592036762652/simplify_ai_complexity
