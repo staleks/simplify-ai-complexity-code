@@ -65,9 +65,5 @@ public class SQSConfig {
         return new EventParser(objectMapper);
     }
 
-    @Bean
-    MessageEventGateway messageEventGateway(final SqsClient sqsConsumerClient) {
-        return new SQSMessageEventGateway(sqsConsumerClient);
-    }
 
 }

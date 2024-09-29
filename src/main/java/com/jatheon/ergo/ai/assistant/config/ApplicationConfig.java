@@ -7,18 +7,21 @@ import com.jatheon.ergo.ai.assistant.service.QuestionService;
 import com.jatheon.ergo.ai.assistant.service.file.S3UploadStorageService;
 import com.jatheon.ergo.ai.assistant.service.file.UploadStorageService;
 import com.jatheon.ergo.ai.assistant.service.prompt.PromptFactory;
+import com.jatheon.ergo.ai.assistant.service.queue.MessageEventGateway;
+import com.jatheon.ergo.ai.assistant.service.queue.SQSMessageEventGateway;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.sqs.SqsClient;
 
 @Import({
         RestWebMvcConfig.class,
         Langchain4JConfig.class,
         S3ClientConfig.class,
-        SQSConfig.class,
-        SchedulerConfig.class
+        SchedulerConfig.class,
+        SQSConfig.class
 })
 @Configuration
 public class ApplicationConfig {
@@ -42,6 +45,12 @@ public class ApplicationConfig {
     @Bean
     FileUploadController fileUploadController(final UploadStorageService uploadStorageService) {
         return new FileUploadController(uploadStorageService);
+    }
+
+    //~ upload S3 event
+    @Bean
+    MessageEventGateway messageEventGateway(final SqsClient sqsConsumerClient) {
+        return new SQSMessageEventGateway(sqsConsumerClient);
     }
 
 }
