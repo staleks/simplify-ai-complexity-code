@@ -16,10 +16,13 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Import({
         RestWebMvcConfig.class,
         Langchain4JConfig.class,
-        S3ClientConfig.class
+        S3ClientConfig.class,
+        SQSConfig.class,
+        SchedulerConfig.class
 })
 @Configuration
 public class ApplicationConfig {
+
     @Bean
     QuestionService questionService(final ChatLanguageModel chatLanguageModel) {
         return new OpenAIQuestionService(new PromptFactory(), chatLanguageModel);

@@ -1,4 +1,4 @@
-package com.jatheon.ergo.ai.assistant.model;
+package com.jatheon.ergo.ai.assistant.model.inference;
 
 import lombok.Data;
 

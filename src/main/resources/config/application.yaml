@@ -47,9 +47,20 @@ langchain4j:
       log-requests: true
       log-responses: true
 
-##### AWS S3 #####
+##### AWS S3 & SQS #####
 aws:
   s3:
-    endpoint: https://s3.us-east-1.amazonaws.com
     region: us-east-1
+    endpoint: https://s3.us-east-1.amazonaws.com
     bucketName: simplify-ai-complexity
+  sqs:
+    region: us-east-1
+    consumer:
+      endpoint: https://sqs.us-east-1.amazonaws.com/592036762652/simplify_ai_complexity
+      maxNumberOfMessagesToReceive: 10
+      waitTimeSeconds: 20
+
+processing:
+  message:
+    fetch:
+      rate: 50

@@ -1,19 +1,16 @@
 package com.jatheon.ergo.ai.assistant.endpoint;
 
-import com.jatheon.ergo.ai.assistant.model.QuestionRequest;
-import com.jatheon.ergo.ai.assistant.model.QuestionResponse;
+import com.jatheon.ergo.ai.assistant.model.inference.QuestionRequest;
+import com.jatheon.ergo.ai.assistant.model.inference.QuestionResponse;
 import com.jatheon.ergo.ai.assistant.service.QuestionService;
 import com.jatheon.ergo.ai.assistant.service.error.QuestionServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j

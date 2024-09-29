@@ -54,6 +54,8 @@ dependencies {
 
 	//~ AWS
 	implementation "software.amazon.awssdk:s3:${awsSdkVersion}"
+	implementation "software.amazon.awssdk:s3-event-notifications:${awsSdkVersion}"
+	implementation "software.amazon.awssdk:sqs:${awsSdkVersion}"
 	implementation "software.amazon.awssdk:url-connection-client:${awsSdkVersion}"
 
 	//~ testing
