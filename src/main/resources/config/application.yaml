@@ -42,3 +42,10 @@ langchain4j:
       max-retries: 3
       log-requests: true
       log-responses: true
+
+##### AWS S3 #####
+aws:
+  s3:
+    endpoint: https://s3.us-east-1.amazonaws.com
+    region: us-east-1
+    bucketName: simplify-ai-complexity-code

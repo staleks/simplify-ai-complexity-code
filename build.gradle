@@ -49,6 +49,13 @@ dependencies {
 	implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
 	implementation "dev.langchain4j:langchain4j-open-ai:${langchain4jVersion}"
 
+	//~ Apache Commons Codecs
+	implementation "commons-codec:commons-codec:${commonsCodecsVersion}"
+
+	//~ AWS
+	implementation "software.amazon.awssdk:s3:${awsSdkVersion}"
+	implementation "software.amazon.awssdk:url-connection-client:${awsSdkVersion}"
+
 	//~ testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -1,17 +1,22 @@
 package com.jatheon.ergo.ai.assistant.config;
 
 import com.jatheon.ergo.ai.assistant.endpoint.QuestionController;
+import com.jatheon.ergo.ai.assistant.endpoint.file.FileUploadController;
 import com.jatheon.ergo.ai.assistant.service.OpenAIQuestionService;
 import com.jatheon.ergo.ai.assistant.service.QuestionService;
+import com.jatheon.ergo.ai.assistant.service.file.S3UploadStorageService;
+import com.jatheon.ergo.ai.assistant.service.file.UploadStorageService;
 import com.jatheon.ergo.ai.assistant.service.prompt.PromptFactory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Import({
         RestWebMvcConfig.class,
-        Langchain4JConfig.class
+        Langchain4JConfig.class,
+        S3ClientConfig.class
 })
 @Configuration
 public class ApplicationConfig {
@@ -23,6 +28,16 @@ public class ApplicationConfig {
     @Bean
     QuestionController questionController(final QuestionService questionService) {
         return new QuestionController(questionService);
+    }
+
+    //~ file upload
+    @Bean
+    UploadStorageService uploadStorageService(final S3Client s3Client) {
+        return new S3UploadStorageService(s3Client);
+    }
+
+    FileUploadController fileUploadController(final UploadStorageService uploadStorageService) {
+        return new FileUploadController(uploadStorageService);
     }
 
 }
