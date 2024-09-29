@@ -36,6 +36,7 @@ public class ApplicationConfig {
         return new S3UploadStorageService(s3Client);
     }
 
+    @Bean
     FileUploadController fileUploadController(final UploadStorageService uploadStorageService) {
         return new FileUploadController(uploadStorageService);
     }
