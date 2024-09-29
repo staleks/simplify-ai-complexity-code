@@ -1,6 +1,6 @@
 package com.jatheon.ergo.ai.assistant.endpoint.file;
 
-import com.jatheon.ergo.ai.assistant.service.file.UploadStorageService;
+import com.jatheon.ergo.ai.assistant.service.file.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Slf4j
 @RestController
@@ -24,7 +21,7 @@ public class FileUploadController {
 
     private static final String UPLOAD_DIR = "uploads/";
 
-    private final UploadStorageService uploadStorageService;
+    private final StorageService uploadStorageService;
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {

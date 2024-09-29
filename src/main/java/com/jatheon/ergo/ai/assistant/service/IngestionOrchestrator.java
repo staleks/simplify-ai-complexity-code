@@ -1,7 +1,9 @@
 package com.jatheon.ergo.ai.assistant.service;
 
 import com.jatheon.ergo.ai.assistant.model.queue.DocumentUploadEvent;
+import com.jatheon.ergo.ai.assistant.service.file.StorageService;
 import com.jatheon.ergo.ai.assistant.service.queue.MessageEventGateway;
+import dev.langchain4j.data.document.Document;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,6 +15,7 @@ import java.util.List;
 public class IngestionOrchestrator {
 
     private final MessageEventGateway messageEventGateway;
+    private final StorageService storageService;
 
     @Scheduled(fixedRateString = "${processing.message.fetch.rate}")
     public void processEvent() {
@@ -21,6 +24,8 @@ public class IngestionOrchestrator {
         events.forEach(event -> {
             log.info("Received message: {}", event);
             // Process the message
+            Document document = storageService.load(event.getObjectKey());
+            log.info("Document: {}", document);
             messageEventGateway.deleteEvent(event.getEventId());
             log.info("Deleted message: {}", event);
         });

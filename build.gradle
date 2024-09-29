@@ -47,6 +47,10 @@ dependencies {
 
 	//~ dev.langchain4j
 	implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
+	implementation "dev.langchain4j:langchain4j-document-loader-amazon-s3:${langchain4jVersion}"
+	implementation "dev.langchain4j:langchain4j-document-parser-apache-tika:${langchain4jVersion}"
+	implementation "dev.langchain4j:langchain4j-document-parser-apache-pdfbox:${langchain4jVersion}"
+	implementation "dev.langchain4j:langchain4j-document-parser-apache-poi:${langchain4jVersion}"
 	implementation "dev.langchain4j:langchain4j-open-ai:${langchain4jVersion}"
 
 	//~ Apache Commons Codecs
