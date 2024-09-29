@@ -25,7 +25,7 @@ public class IngestionOrchestrator {
             log.info("Received message: {}", event);
             // Process the message
             Document document = storageService.load(event.getObjectKey());
-            log.info("Document: {}", document);
+            log.info("Loaded document");
             messageEventGateway.deleteEvent(event.getEventId());
             log.info("Deleted message: {}", event);
         });
