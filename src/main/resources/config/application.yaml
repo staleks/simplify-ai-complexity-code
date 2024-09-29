@@ -52,4 +52,4 @@ aws:
   s3:
     endpoint: https://s3.us-east-1.amazonaws.com
     region: us-east-1
-    bucketName: simplify-ai-complexity-code
+    bucketName: simplify-ai-complexity
