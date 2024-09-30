@@ -61,6 +61,10 @@ public class Langchain4JConfig {
     private String esHost;
     @Value("${elasticsearch.port}")
     private String esPort;
+    @Value("${elasticsearch.username}")
+    private String esUsername;
+    @Value("${elasticsearch.password}")
+    private String esPassword;
     @Value("${vectorstore.index.name}")
     private String indexName;
     @Value("${vectorstore.dimension.size}")
@@ -103,6 +107,8 @@ public class Langchain4JConfig {
     EmbeddingStore<TextSegment> embeddingStore() {
         ElasticsearchEmbeddingStore embeddingStore = ElasticsearchEmbeddingStore.builder()
                 .serverUrl("http://" + esHost + ":" + esPort)
+                .userName(esUsername)
+                .password(esPassword)
                 .indexName(indexName)
                 .dimension(dimensionSize)
                 .build();
