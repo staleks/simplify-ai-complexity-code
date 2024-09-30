@@ -12,10 +12,9 @@ import com.jatheon.ergo.ai.assistant.service.file.parser.DocumentParserFactory;
 import com.jatheon.ergo.ai.assistant.service.prompt.PromptFactory;
 import com.jatheon.ergo.ai.assistant.service.queue.MessageEventGateway;
 import com.jatheon.ergo.ai.assistant.service.queue.SQSMessageEventGateway;
-import dev.langchain4j.data.document.DocumentParser;
 import dev.langchain4j.data.document.loader.amazon.s3.AmazonS3DocumentLoader;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import org.springframework.beans.factory.annotation.Qualifier;
+import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -63,8 +62,9 @@ public class ApplicationConfig {
 
     @Bean
     IngestionOrchestrator ingestionOrchestrator(final MessageEventGateway messageEventGateway,
-                                                final StorageService storageService) {
-        return new IngestionOrchestrator(messageEventGateway, storageService);
+                                                final StorageService storageService,
+                                                final EmbeddingStoreIngestor embeddingStoreIngestor) {
+        return new IngestionOrchestrator(messageEventGateway, storageService, embeddingStoreIngestor);
     }
 
     //~ document parsing

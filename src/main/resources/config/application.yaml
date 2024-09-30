@@ -69,3 +69,14 @@ processing:
   message:
     fetch:
       rate: 50
+
+##### Vector Store ES #####
+elasticsearch:
+  host: localhost
+  port: 9200
+
+vectorstore:
+  index:
+    name: embeddings
+  dimension:
+    size: 1536
