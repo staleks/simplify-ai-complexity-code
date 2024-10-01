@@ -1,4 +1,4 @@
-package com.jatheon.ergo.ai.assistant.config;
+package com.jatheon.ergo.ai.assistant.config.web;
 
 import jakarta.annotation.Nonnull;
 import org.springframework.context.annotation.Bean;

@@ -1,10 +1,8 @@
-package com.jatheon.ergo.ai.assistant.config;
+package com.jatheon.ergo.ai.assistant.config.queue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.jatheon.ergo.ai.assistant.service.queue.MessageEventGateway;
-import com.jatheon.ergo.ai.assistant.service.queue.SQSMessageEventGateway;
 import com.jatheon.ergo.ai.assistant.service.queue.parser.EventParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.jatheon.ergo.ai.assistant.config;
+package com.jatheon.ergo.ai.assistant.config.scheduling;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

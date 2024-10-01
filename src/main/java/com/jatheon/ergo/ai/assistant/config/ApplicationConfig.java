@@ -1,5 +1,10 @@
 package com.jatheon.ergo.ai.assistant.config;
 
+import com.jatheon.ergo.ai.assistant.config.langchain4j.Langchain4JConfig;
+import com.jatheon.ergo.ai.assistant.config.queue.SQSConfig;
+import com.jatheon.ergo.ai.assistant.config.scheduling.SchedulerConfig;
+import com.jatheon.ergo.ai.assistant.config.storage.S3ClientConfig;
+import com.jatheon.ergo.ai.assistant.config.web.RestWebMvcConfig;
 import com.jatheon.ergo.ai.assistant.endpoint.QuestionController;
 import com.jatheon.ergo.ai.assistant.endpoint.file.FileUploadController;
 import com.jatheon.ergo.ai.assistant.service.IngestionOrchestrator;

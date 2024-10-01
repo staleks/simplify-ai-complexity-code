@@ -1,4 +1,4 @@
-package com.jatheon.ergo.ai.assistant.config;
+package com.jatheon.ergo.ai.assistant.config.storage;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
