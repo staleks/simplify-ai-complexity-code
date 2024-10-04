@@ -1,0 +1,53 @@
+{
+    "mappings" : {
+      "properties" : {
+        "metadata" : {
+          "properties" : {
+            "contentLength" : {
+              "type" : "long"
+            },
+            "contentType" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "index" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "source" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            }
+          }
+        },
+        "text" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "vector" : {
+          "type": "dense_vector",
+          "dims": 1536
+        }
+      }
+    }
+}

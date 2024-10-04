@@ -34,4 +34,5 @@ public class PromptFactory {
         return promptTemplate.apply(variables);
     }
 
+
 }

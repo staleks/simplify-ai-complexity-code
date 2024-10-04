@@ -3,6 +3,8 @@ package com.jatheon.ergo.ai.assistant.config.langchain4j;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +36,18 @@ public class Langchain4JConfig {
                 .embeddingStore(embeddingStore)
                 .build();
     }
+
+    /**
+    @Bean
+    ContentRetriever contentRetriever(final EmbeddingModel embeddingModel,
+                                      final EmbeddingStore<TextSegment> embeddingStore) {
+        return EmbeddingStoreContentRetriever.builder()
+                .embeddingModel(embeddingModel)
+                .embeddingStore(embeddingStore)
+                .maxResults(10)
+                .minScore(0.7)
+                .build();
+    }
+    **/
 
 }

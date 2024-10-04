@@ -18,7 +18,11 @@ import com.jatheon.ergo.ai.assistant.service.prompt.PromptFactory;
 import com.jatheon.ergo.ai.assistant.service.queue.MessageEventGateway;
 import com.jatheon.ergo.ai.assistant.service.queue.SQSMessageEventGateway;
 import dev.langchain4j.data.document.loader.amazon.s3.AmazonS3DocumentLoader;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +41,10 @@ import software.amazon.awssdk.services.sqs.SqsClient;
 public class ApplicationConfig {
 
     @Bean
-    QuestionService questionService(final ChatLanguageModel chatLanguageModel) {
-        return new OpenAIQuestionService(new PromptFactory(), chatLanguageModel);
+    QuestionService questionService(final EmbeddingModel embeddingModel,
+                                    final EmbeddingStore<TextSegment> embeddingStore,
+                                    final ChatLanguageModel chatLanguageModel) {
+        return new OpenAIQuestionService(embeddingModel, embeddingStore, chatLanguageModel);
     }
 
     @Bean
