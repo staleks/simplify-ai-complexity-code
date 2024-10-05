@@ -1,11 +1,14 @@
 package com.jatheon.ergo.ai.assistant.model.inference;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
+@Getter
+public abstract class QuestionResponse {
 
-@Builder
-public class QuestionResponse {
-    @Getter
     private final String answer;
+
+    public QuestionResponse(String answer) {
+        this.answer = answer;
+    }
 }

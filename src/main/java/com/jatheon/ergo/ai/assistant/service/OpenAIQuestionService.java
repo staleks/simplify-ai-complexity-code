@@ -1,6 +1,7 @@
 package com.jatheon.ergo.ai.assistant.service;
 
-import com.jatheon.ergo.ai.assistant.model.inference.QuestionResponse;
+import com.jatheon.ergo.ai.assistant.model.inference.EnrichedQuestionResponse;
+import com.jatheon.ergo.ai.assistant.model.inference.SimpleQuestionResponse;
 import com.jatheon.ergo.ai.assistant.model.inference.RecommendationItem;
 import com.jatheon.ergo.ai.assistant.service.error.QuestionServiceException;
 import dev.langchain4j.data.embedding.Embedding;
@@ -40,7 +41,7 @@ public class OpenAIQuestionService implements QuestionService {
     private final ChatLanguageModel chatLanguageModel;
 
     @Override
-    public QuestionResponse performSearch(final String question) throws QuestionServiceException {
+    public SimpleQuestionResponse performSearch(final String question) throws QuestionServiceException {
         // Embed the question
         Response<Embedding> queryEmbedding = embeddingModel.embed(question);
 
@@ -81,8 +82,7 @@ public class OpenAIQuestionService implements QuestionService {
 
         String answer = chatLanguageModel.generate(prompt.toUserMessage().text());
         // See an answer from the model
-        log.debug("Answer: {}", answer);
-        return QuestionResponse.builder().answer(answer).build();
+        return new SimpleQuestionResponse(answer);
 
         /**
         log.info("--- Find Relevant Embeddings ---");
@@ -145,6 +145,51 @@ public class OpenAIQuestionService implements QuestionService {
             throw new QuestionServiceException("Error generating answer", ex);
         }
         **/
+    }
+
+    @Override
+    public EnrichedQuestionResponse performAdvancedSearch(String question) throws QuestionServiceException {
+        // Embed the question
+        Response<Embedding> queryEmbedding = embeddingModel.embed(question);
+
+        // Find relevant embeddings in embedding store by semantic similarity
+        List<EmbeddingMatch<TextSegment>> relevantEmbeddings = embeddingStore.findRelevant(queryEmbedding.content(), maxResults, minScore);
+        List<RecommendationItem> recommendationItems = new ArrayList<>();
+        for (EmbeddingMatch<TextSegment> embeddingMatch : relevantEmbeddings) {
+            RecommendationItem recommendationItem = new RecommendationItem();
+            recommendationItem.setEmbeddingId(embeddingMatch.embeddingId());
+            recommendationItem.setText(embeddingMatch.embedded().text());
+            recommendationItem.setScore(embeddingMatch.score());
+            recommendationItem.setResourceId(embeddingMatch.embedded().metadata("source"));
+            recommendationItem.setLink(embeddingMatch.embedded().metadata("source"));
+            recommendationItems.add(recommendationItem);
+        }
+        Collections.sort(recommendationItems);
+
+        // Create a prompt for the model that includes question and relevant embeddings
+        PromptTemplate promptTemplate = PromptTemplate.from(
+                "You are a helpful AI assistant. Use the following pieces of context to answer the user's question. "
+                        + "If you don't know the answer, just say that you don't know. Don't try to make up an answer.\n"
+                        + "Answer the following question to the best of your ability:\n"
+                        + "{{question}}\n"
+                        + "\n"
+                        + "Context:\n"
+                        + "{{context}}\n"
+        );
+
+        String context = relevantEmbeddings.stream()
+                .map(match -> match.embedded().text())
+                .collect(joining("\n\n"));
+
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("question", question);
+        variables.put("context", context);
+
+        Prompt prompt = promptTemplate.apply(variables);
+
+        String answer = chatLanguageModel.generate(prompt.toUserMessage().text());
+        // See an answer from the model
+        return new EnrichedQuestionResponse(answer, recommendationItems);
     }
 
 }

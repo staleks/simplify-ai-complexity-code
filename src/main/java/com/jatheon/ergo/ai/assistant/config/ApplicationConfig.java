@@ -5,6 +5,7 @@ import com.jatheon.ergo.ai.assistant.config.queue.SQSConfig;
 import com.jatheon.ergo.ai.assistant.config.scheduling.SchedulerConfig;
 import com.jatheon.ergo.ai.assistant.config.storage.S3ClientConfig;
 import com.jatheon.ergo.ai.assistant.config.web.RestWebMvcConfig;
+import com.jatheon.ergo.ai.assistant.endpoint.AdvancedQuestionController;
 import com.jatheon.ergo.ai.assistant.endpoint.QuestionController;
 import com.jatheon.ergo.ai.assistant.endpoint.file.FileUploadController;
 import com.jatheon.ergo.ai.assistant.service.IngestionOrchestrator;
@@ -50,6 +51,11 @@ public class ApplicationConfig {
     @Bean
     QuestionController questionController(final QuestionService questionService) {
         return new QuestionController(questionService);
+    }
+
+    @Bean
+    AdvancedQuestionController advancedQuestionController(final QuestionService questionService) {
+        return new AdvancedQuestionController(questionService);
     }
 
     //~ file upload
