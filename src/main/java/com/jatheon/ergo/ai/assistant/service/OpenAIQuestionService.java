@@ -1,6 +1,7 @@
 package com.jatheon.ergo.ai.assistant.service;
 
 import com.jatheon.ergo.ai.assistant.model.inference.QuestionResponse;
+import com.jatheon.ergo.ai.assistant.model.inference.RecommendationItem;
 import com.jatheon.ergo.ai.assistant.service.error.QuestionServiceException;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
@@ -13,7 +14,10 @@ import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +27,13 @@ import static java.util.stream.Collectors.joining;
 @Slf4j
 @RequiredArgsConstructor
 public class OpenAIQuestionService implements QuestionService {
-    private static final String TEST_METADATA_SOURCE = "s3://simplify-ai-complexity/Levi9-How_to_transform_data_into_value_with_GenerativeAI.pdf";
+    // private static final String TEST_METADATA_SOURCE = "s3://simplify-ai-complexity/Levi9-How_to_transform_data_into_value_with_GenerativeAI.pdf";
+
+    @Value("${documentAssistant.inference.maxResults:20}")
+    private Integer maxResults;
+
+    @Value("${documentAssistant.inference.minScore:0.7}")
+    private Double minScore;
 
     private final EmbeddingModel embeddingModel;
     private final EmbeddingStore<TextSegment> embeddingStore;
@@ -35,29 +45,37 @@ public class OpenAIQuestionService implements QuestionService {
         Response<Embedding> queryEmbedding = embeddingModel.embed(question);
 
         // Find relevant embeddings in embedding store by semantic similarity
-        List<EmbeddingMatch<TextSegment>> relevantEmbeddings = embeddingStore.findRelevant(queryEmbedding.content(), 10, 0.8);
-        for (int i = 0; i < relevantEmbeddings.size(); i++) {
-            EmbeddingMatch<TextSegment> embeddingMatch = relevantEmbeddings.get(i);
-            log.info("Match [score: {}, text: {}]", embeddingMatch.score(), embeddingMatch.embedded().text());
+        List<EmbeddingMatch<TextSegment>> relevantEmbeddings = embeddingStore.findRelevant(queryEmbedding.content(), maxResults, minScore);
+        List<RecommendationItem> recommendationItems = new ArrayList<>();
+        for (EmbeddingMatch<TextSegment> embeddingMatch : relevantEmbeddings) {
+            RecommendationItem recommendationItem = new RecommendationItem();
+            recommendationItem.setEmbeddingId(embeddingMatch.embeddingId());
+            recommendationItem.setText(embeddingMatch.embedded().text());
+            recommendationItem.setScore(embeddingMatch.score());
+            recommendationItem.setResourceId(embeddingMatch.embedded().metadata("source"));
+            recommendationItem.setLink(embeddingMatch.embedded().metadata("source"));
+            recommendationItems.add(recommendationItem);
         }
+        Collections.sort(recommendationItems);
 
         // Create a prompt for the model that includes question and relevant embeddings
         PromptTemplate promptTemplate = PromptTemplate.from(
-                "Answer the following question to the best of your ability:\n"
-                        + "\n"
-                        + "Question:\n"
+                "You are a helpful AI assistant. Use the following pieces of context to answer the user's question. "
+                        + "If you don't know the answer, just say that you don't know. Don't try to make up an answer.\n"
+                        + "Answer the following question to the best of your ability:\n"
                         + "{{question}}\n"
                         + "\n"
-                        + "Base your answer on the following information:\n"
-                        + "{{information}}");
+                        + "Context:\n"
+                        + "{{context}}\n"
+        );
 
-        String information = relevantEmbeddings.stream()
+        String context = relevantEmbeddings.stream()
                 .map(match -> match.embedded().text())
                 .collect(joining("\n\n"));
 
         Map<String, Object> variables = new HashMap<>();
         variables.put("question", question);
-        variables.put("information", information);
+        variables.put("context", context);
 
         Prompt prompt = promptTemplate.apply(variables);
 
@@ -67,11 +85,6 @@ public class OpenAIQuestionService implements QuestionService {
         return QuestionResponse.builder().answer(answer).build();
 
         /**
-        // Embed the question
-        Response<Embedding> queryEmbedding = embeddingModel.embed(question);
-        Embedding embedding = queryEmbedding.content();
-
-
         log.info("--- Find Relevant Embeddings ---");
         // Perform the search
         List<EmbeddingMatch<TextSegment>> relevantEmbeddings = embeddingStore.findRelevant(embedding,
@@ -105,27 +118,6 @@ public class OpenAIQuestionService implements QuestionService {
                 .minScore(0.7)
                 .build();
 
-        // Define custom prompt template
-        PromptTemplate promptTemplate = PromptTemplate.from(
-                "You are a helpful AI assistant. Use the following pieces of context to answer the user's question. " +
-                        "If you don't know the answer, just say that you don't know. Don't try to make up an answer.\n" +
-                        "Context:\n" +
-                        "{{context}}\n" +
-                        "Human: {{question}}\n" +
-                        "AI: "
-        );
-
-        String information = relevantEmbeddings.stream()
-                .map(match -> match.embedded().text())
-                .collect(joining("\n\n"));
-
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("question", question);
-        variables.put("context", information);
-
-        Prompt prompt = promptTemplate.apply(variables);
-
-        /**
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
         ConversationalRetrievalChain conversationalRetrievalChain = ConversationalRetrievalChain.builder()
                 .chatLanguageModel(chatLanguageModel)

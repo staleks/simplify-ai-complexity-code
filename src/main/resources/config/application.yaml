@@ -38,7 +38,7 @@ langchain4j:
     # OpenAI - openai
     openai:
       api-key: x
-      model-name: gpt-3.5-turbo
+      model-name: gpt-4o
       temperature: 0.0
       top-p: 1.0
       max-tokens: 100
@@ -65,6 +65,8 @@ aws:
       maxNumberOfMessagesToReceive: 10
       waitTimeSeconds: 20
 
+
+##### Processing #####
 processing:
   message:
     fetch:
@@ -82,3 +84,9 @@ vectorstore:
     name: embeddings
   dimension:
     size: 1536
+
+##### Document Assistant #####
+documentAssistant:
+  inference:
+    maxResults: 20
+    minScore: 0.7
