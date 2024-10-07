@@ -2,8 +2,7 @@ package com.jatheon.ergo.ai.assistant.endpoint;
 
 import com.jatheon.ergo.ai.assistant.model.inference.EnrichedQuestionResponse;
 import com.jatheon.ergo.ai.assistant.model.inference.QuestionRequest;
-import com.jatheon.ergo.ai.assistant.model.inference.SimpleQuestionResponse;
-import com.jatheon.ergo.ai.assistant.service.QuestionService;
+import com.jatheon.ergo.ai.assistant.service.EnrichedQuestionService;
 import com.jatheon.ergo.ai.assistant.service.error.QuestionServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class AdvancedQuestionController {
+public class EnrichedQuestionController {
 
     private static final String ADVANCED_ANSWER_ENDPOINT = "/ai/get-advanced-answer";
 
-    private final QuestionService questionService;
+    private final EnrichedQuestionService questionService;
 
     @PostMapping(value = ADVANCED_ANSWER_ENDPOINT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
