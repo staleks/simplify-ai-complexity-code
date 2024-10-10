@@ -47,6 +47,9 @@ langchain4j:
       max-retries: 3
       log-requests: true
       log-responses: true
+  dalle3:
+    api-key: x
+
 
 ##### AWS S3 & SQS #####
 aws:
@@ -90,3 +93,5 @@ documentAssistant:
   inference:
     maxResults: 20
     minScore: 0.7
+
+

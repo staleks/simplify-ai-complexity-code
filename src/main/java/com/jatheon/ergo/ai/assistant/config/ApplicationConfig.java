@@ -6,6 +6,7 @@ import com.jatheon.ergo.ai.assistant.config.scheduling.SchedulerConfig;
 import com.jatheon.ergo.ai.assistant.config.storage.S3ClientConfig;
 import com.jatheon.ergo.ai.assistant.config.web.RestWebMvcConfig;
 import com.jatheon.ergo.ai.assistant.endpoint.EnrichedQuestionController;
+import com.jatheon.ergo.ai.assistant.endpoint.ImageController;
 import com.jatheon.ergo.ai.assistant.endpoint.QuestionController;
 import com.jatheon.ergo.ai.assistant.endpoint.file.FileUploadController;
 import com.jatheon.ergo.ai.assistant.service.EnrichedOpenAIQuestionService;
@@ -17,6 +18,8 @@ import com.jatheon.ergo.ai.assistant.service.file.S3StorageService;
 import com.jatheon.ergo.ai.assistant.service.file.StorageService;
 import com.jatheon.ergo.ai.assistant.service.file.parser.CustomDocumentParserFactory;
 import com.jatheon.ergo.ai.assistant.service.file.parser.DocumentParserFactory;
+import com.jatheon.ergo.ai.assistant.service.image.ImageService;
+import com.jatheon.ergo.ai.assistant.service.image.OpenAIImageService;
 import com.jatheon.ergo.ai.assistant.service.queue.MessageEventGateway;
 import com.jatheon.ergo.ai.assistant.service.queue.SQSMessageEventGateway;
 import dev.langchain4j.data.document.loader.amazon.s3.AmazonS3DocumentLoader;
@@ -103,6 +106,17 @@ public class ApplicationConfig {
     @Bean
     AmazonS3DocumentLoader documentLoader(final S3Client s3Client) {
         return new AmazonS3DocumentLoader(s3Client);
+    }
+
+    //~ Image
+    @Bean
+    ImageService imageService() {
+        return new OpenAIImageService();
+    }
+
+    @Bean
+    ImageController imageController(final ImageService imageService) {
+        return new ImageController(imageService);
     }
 
 }
